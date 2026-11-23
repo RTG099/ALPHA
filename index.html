@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ALPHA — Media Player for Windows &amp; Android</title>
+  <meta name="description" content="Official home of ALPHA Media Player for Windows and Android — Music, Podcasts, Movies &amp; Shows in one unified, fast, distraction-free player by RTG099." />
+  <link rel="icon" type="image/png" href="assets/alpha.png" />
+  <style>
+    :root {
+      --bg: #0c0a12;
+      --panel: #151221;
+      --deep: #100d1a;
+      --hover: #1e1930;
+      --border: #2a2440;
+      --accent: #d85a77;
+      --accent-soft: rgba(216, 90, 119, 0.18);
+      --accent-glow: rgba(216, 90, 119, 0.34);
+      --text: #f5f3fa;
+      --dim: #a59eb8;
+      --faint: #6f6885;
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+      background:
+        radial-gradient(ellipse 75% 45% at 50% -10%, rgba(216, 90, 119, 0.22), transparent 65%),
+        radial-gradient(ellipse 60% 40% at 85% 20%, rgba(108, 72, 198, 0.14), transparent 60%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Top Nav */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      backdrop-filter: blur(16px);
+      background: rgba(12, 10, 18, 0.78);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 66px;
+      gap: 16px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font-weight: 800;
+      font-size: 1.15rem;
+      letter-spacing: 0.08em;
+    }
+    .brand img {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      box-shadow: 0 0 18px var(--accent-glow);
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      font-size: 0.92rem;
+      color: var(--dim);
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-btn {
+      padding: 8px 16px;
+      border-radius: 10px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--text) !important;
+      font-weight: 600;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .nav-btn:hover {
+      border-color: var(--accent);
+      background: var(--hover);
+    }
+
+    /* Hero */
+    .hero {
+      padding: 72px 0 46px;
+      text-align: center;
+    }
+    .hero-logo-wrap {
+      position: relative;
+      display: inline-flex;
+      margin-bottom: 24px;
+    }
+    .hero-logo-wrap::before {
+      content: "";
+      position: absolute;
+      inset: -26px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--accent-glow), transparent 70%);
+      z-index: 0;
+    }
+    .hero-logo {
+      position: relative;
+      z-index: 1;
+      width: 92px;
+      height: 92px;
+      border-radius: 22px;
+      border: 1px solid var(--border);
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.55);
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      border: 1px solid rgba(216, 90, 119, 0.35);
+      color: #ff9cb2;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 18px;
+    }
+    .hero h1 {
+      font-size: clamp(2.1rem, 5vw, 3.4rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    .hero h1 span {
+      background: linear-gradient(135deg, #ff8ba5, var(--accent) 55%, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      max-width: 630px;
+      margin: 0 auto 36px;
+      color: var(--dim);
+      font-size: 1.05rem;
+    }
+
+    /* Download Cards */
+    .downloads-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 18px;
+      max-width: 820px;
+      margin: 0 auto;
+    }
+    .dl-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+    .dl-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent);
+      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.45);
+    }
+    .dl-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .dl-title-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .platform-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--deep);
+      border: 1px solid var(--border);
+      display: grid;
+      place-items: center;
+      color: var(--accent);
+    }
+    .dl-card h2 { font-size: 1.2rem; font-weight: 700; }
+    .dl-sub { color: var(--dim); font-size: 0.85rem; }
+    .ver-pill {
+      padding: 4px 10px;
+      border-radius: 8px;
+      background: var(--deep);
+      border: 1px solid var(--border);
+      color: #ff9cb2;
+      font-size: 0.78rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .dl-meta {
+      color: var(--faint);
+      font-size: 0.82rem;
+      min-height: 20px;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      width: 100%;
+      padding: 13px 18px;
+      border-radius: 12px;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.96rem;
+      border: none;
+      cursor: pointer;
+      transition: filter 0.18s, transform 0.15s;
+    }
+    .btn-primary:hover { filter: brightness(1.09); }
+    .btn-primary:active { transform: scale(0.985); }
+
+    .status-note {
+      margin-top: 16px;
+      font-size: 0.84rem;
+      color: var(--faint);
+    }
+    .status-note a { color: #ff9cb2; text-decoration: underline; }
+
+    /* Sections */
+    section { padding: 48px 0; }
+    .section-title {
+      font-size: 1.55rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+    .section-sub {
+      color: var(--dim);
+      text-align: center;
+      margin-bottom: 28px;
+      font-size: 0.95rem;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+    }
+    .feat-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+    }
+    .feat-card h3 {
+      font-size: 1.02rem;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    .feat-card p {
+      font-size: 0.88rem;
+      color: var(--dim);
+    }
+
+    /* Release Notes + Install Guide */
+    .two-col {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 18px;
+    }
+    .info-panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+    }
+    .info-panel h3 {
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .info-panel ol, .info-panel ul {
+      padding-left: 18px;
+      color: var(--dim);
+      font-size: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .changelog-box {
+      background: var(--deep);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      color: var(--dim);
+      font-size: 0.88rem;
+      white-space: pre-wrap;
+      max-height: 240px;
+      overflow-y: auto;
+    }
+
+    /* About Creator */
+    .about-card {
+      background: linear-gradient(135deg, rgba(216, 90, 119, 0.10), rgba(21, 18, 33, 0.95) 55%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .about-text { max-width: 600px; }
+    .about-text h3 { font-size: 1.25rem; margin-bottom: 6px; }
+    .about-text p { color: var(--dim); font-size: 0.93rem; }
+    .about-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .btn-outline {
+      padding: 10px 16px;
+      border-radius: 10px;
+      background: var(--deep);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-outline:hover { border-color: var(--accent); background: var(--hover); }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 26px 0 36px;
+      text-align: center;
+      color: var(--faint);
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 640px) {
+      .nav-links a:not(.nav-btn) { display: none; }
+      .hero { padding-top: 46px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a href="#" class="brand">
+        <img src="assets/alpha.png" alt="ALPHA Logo" />
+        <span>ALPHA</span>
+      </a>
+      <nav class="nav-links">
+        <a href="#downloads">Downloads</a>
+        <a href="#features">Features</a>
+        <a href="#install">Install Guide</a>
+        <a href="#about">About</a>
+        <a class="nav-btn" href="https://github.com/RTG099/ALPHA/releases" target="_blank" rel="noopener">All Releases</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero" id="downloads">
+      <div class="hero-logo-wrap">
+        <img src="assets/alpha.png" alt="ALPHA Media Player" class="hero-logo" />
+      </div>
+      <div>
+        <span class="badge">Music · Podcasts · Movies &amp; Shows — 100% Free &amp; Local-First</span>
+      </div>
+      <h1>One Clean Player.<br /><span>Windows &amp; Android.</span></h1>
+      <p>
+        ALPHA brings your local music library, synced lyrics, custom &amp; smart playlists, RSS audio &amp; video podcasts, and movies &amp; shows together in one fast, distraction-free interface.
+      </p>
+
+      <div class="downloads-grid">
+        <!-- Windows Card -->
+        <div class="dl-card">
+          <div class="dl-head">
+            <div class="dl-title-group">
+              <div class="platform-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M3 5.55 10.35 4.5v7.1H3V5.55zm0 12.9 7.35 1.05v-7.05H3v6zm8.25 1.18L21 21v-8.55h-9.75v7.18zm0-15.26v7.23H21V3l-9.75 1.37z"/>
+                </svg>
+              </div>
+              <div>
+                <h2>ALPHA for Windows</h2>
+                <div class="dl-sub">Windows 10 / 11 (64-bit Installer)</div>
+              </div>
+            </div>
+            <span class="ver-pill" id="win-ver">Latest</span>
+          </div>
+          <div class="dl-meta" id="win-meta">Checking latest GitHub Release…</div>
+          <a class="btn-primary" id="win-btn" href="https://github.com/RTG099/ALPHA/releases">
+            <span>Download for Windows (.exe)</span>
+          </a>
+        </div>
+
+        <!-- Android Card -->
+        <div class="dl-card">
+          <div class="dl-head">
+            <div class="dl-title-group">
+              <div class="platform-icon" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M17.6 9.48 19.44 6.3a.45.45 0 1 0-.78-.45l-1.88 3.25a11.3 11.3 0 0 0-9.56 0L5.34 5.85a.45.45 0 1 0-.78.45L6.4 9.48A10.7 10.7 0 0 0 1 18h22a10.7 10.7 0 0 0-5.4-8.52zM7 15.25a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5zm10 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5z"/>
+                </svg>
+              </div>
+              <div>
+                <h2>ALPHA for Android</h2>
+                <div class="dl-sub">Android 8.0+ (Signed Release APK)</div>
+              </div>
+            </div>
+            <span class="ver-pill" id="and-ver">Latest</span>
+          </div>
+          <div class="dl-meta" id="and-meta">Checking latest GitHub Release…</div>
+          <a class="btn-primary" id="and-btn" href="https://github.com/RTG099/ALPHA/releases">
+            <span>Download for Android (.apk)</span>
+          </a>
+        </div>
+      </div>
+
+      <p class="status-note">
+        Downloads are served directly from <a href="https://github.com/RTG099/ALPHA/releases" target="_blank" rel="noopener">github.com/RTG099/ALPHA/releases</a> and update automatically whenever a new version is published.
+      </p>
+    </section>
+
+    <section id="features">
+      <h2 class="section-title">Designed to Feel Unified Everywhere</h2>
+      <p class="section-sub">The exact same ALPHA sidebar, themes, playlists, podcasts, and watching experience across desktop and mobile.</p>
+      <div class="features-grid">
+        <div class="feat-card">
+          <h3>Faded Cover Carousel &amp; Synced Lyrics</h3>
+          <p>Smooth sliding album art with soft accent halo, slim seek bar, live Up Next queue, and optional LRCLIB synced lyrics.</p>
+        </div>
+        <div class="feat-card">
+          <h3>Custom &amp; Smart Playlists + Pins</h3>
+          <p>Create playlists, auto-updating Smart Playlists (Most Played, Lossless, Favorites), and pin your favorites right into the sidebar.</p>
+        </div>
+        <div class="feat-card">
+          <h3>Audio &amp; Video Podcasts + RSS</h3>
+          <p>Subscribe to any podcast RSS feed, stream or save episodes offline, with separate Audio &amp; Video Podcast views and per-show speed memory.</p>
+        </div>
+        <div class="feat-card">
+          <h3>Watching · Movies, Shows &amp; Auto Tabs</h3>
+          <p>Continue Watching resume progress, watched badges, external subtitles, plus automatic download tabs for TikTok, YouTube, Telegram, and more.</p>
+        </div>
+        <div class="feat-card">
+          <h3>5 Themes, Accent Halo &amp; Equalizer</h3>
+          <p>Switch between Dark, Midnight, Nebula, Forest, and Light themes, cover-matched dynamic accents, and built-in multi-band EQ.</p>
+        </div>
+        <div class="feat-card">
+          <h3>Built-In Update Checker</h3>
+          <p>Check for new releases right inside Settings on both Windows and Android and upgrade in one click.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="install">
+      <div class="two-col">
+        <div class="info-panel">
+          <h3>Latest Release Notes</h3>
+          <div class="changelog-box" id="release-notes">Fetching latest release notes from GitHub…</div>
+        </div>
+        <div class="info-panel">
+          <h3>Quick Install Guide</h3>
+          <ol>
+            <li><strong>Windows:</strong> Download <code>ALPHA-Setup-*.exe</code> and run it. If Windows SmartScreen appears for a new unsigned release, click <em>More info → Run anyway</em>.</li>
+            <li><strong>Android:</strong> Download <code>ALPHA-Android-*.apk</code> on your phone and tap it. Allow installing from your browser/file manager once when prompted by Android.</li>
+            <li><strong>Future Updates:</strong> Open <em>Settings → Updates</em> inside ALPHA anytime to check for and install newer versions automatically.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="about-card">
+        <div class="about-text">
+          <h3>Created by RTG099</h3>
+          <p>
+            ALPHA is an independent, clean, local-first media player built by <strong>RTG099</strong> for people who want full control over their music, podcasts, and videos without subscriptions, clutter, or ads.
+          </p>
+        </div>
+        <div class="about-actions">
+          <a class="btn-outline" href="https://github.com/RTG099/ALPHA" target="_blank" rel="noopener">GitHub Repo</a>
+          <a class="btn-outline" href="https://github.com/RTG099" target="_blank" rel="noopener">RTG099 Profile</a>
+          <a class="btn-outline" href="https://github.com/RTG099/ALPHA/releases" target="_blank" rel="noopener">Release History</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      ALPHA Media Player · Built by RTG099 · Hosted on GitHub Pages
+    </div>
+  </footer>
+
+  <script>
+    (async function loadReleases() {
+      const repo = "RTG099/ALPHA";
+      const apiUrl = `https://api.github.com/repos/${repo}/releases?per_page=15`;
+      const fallbackUrl = `https://github.com/${repo}/releases`;
+
+      const fmtSize = (bytes) => {
+        if (!bytes) return "";
+        const mb = bytes / (1024 * 1024);
+        return mb >= 1 ? `${mb.toFixed(1)} MB` : `${Math.round(bytes / 1024)} KB`;
+      };
+      const fmtDate = (iso) => {
+        if (!iso) return "";
+        try { return new Date(iso).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" }); }
+        catch { return ""; }
+      };
+      const extractVer = (name, tag) => {
+        const m = (name || "").match(/(\d+\.\d+\.\d+)/) || (tag || "").match(/(\d+\.\d+\.\d+)/);
+        return m ? `v${m[1]}` : (tag || "Latest");
+      };
+
+      try {
+        const res = await fetch(apiUrl, { headers: { Accept: "application/vnd.github+json" } });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const releases = await res.json();
+
+        let winAsset = null, winRel = null;
+        let andAsset = null, andRel = null;
+
+        for (const rel of releases) {
+          if (rel.draft) continue;
+          for (const asset of (rel.assets || [])) {
+            const low = (asset.name || "").toLowerCase();
+            if (!winAsset && low.endsWith(".exe")) {
+              winAsset = asset;
+              winRel = rel;
+            }
+            if (!andAsset && low.endsWith(".apk")) {
+              andAsset = asset;
+              andRel = rel;
+            }
+          }
+          if (winAsset && andAsset) break;
+        }
+
+        const winVer = document.getElementById("win-ver");
+        const winMeta = document.getElementById("win-meta");
+        const winBtn = document.getElementById("win-btn");
+        if (winAsset) {
+          const v = extractVer(winAsset.name, winRel.tag_name);
+          winVer.textContent = v;
+          winMeta.textContent = `${winAsset.name} · ${fmtSize(winAsset.size)} · ${fmtDate(winRel.published_at)}`;
+          winBtn.href = winAsset.browser_download_url;
+          winBtn.innerHTML = `<span>Download Windows ${v} (.exe)</span>`;
+        } else {
+          winMeta.textContent = "Upload ALPHA-Setup-*.exe to GitHub Releases to activate direct download.";
+          winBtn.href = fallbackUrl;
+        }
+
+        const andVer = document.getElementById("and-ver");
+        const andMeta = document.getElementById("and-meta");
+        const andBtn = document.getElementById("and-btn");
+        if (andAsset) {
+          const v = extractVer(andAsset.name, andRel.tag_name);
+          andVer.textContent = v;
+          andMeta.textContent = `${andAsset.name} · ${fmtSize(andAsset.size)} · ${fmtDate(andRel.published_at)}`;
+          andBtn.href = andAsset.browser_download_url;
+          andBtn.innerHTML = `<span>Download Android ${v} (.apk)</span>`;
+        } else {
+          andMeta.textContent = "Upload ALPHA-Android-*.apk to GitHub Releases to activate direct download.";
+          andBtn.href = fallbackUrl;
+        }
+
+        const notesEl = document.getElementById("release-notes");
+        const latestRel = releases.find(r => !r.draft);
+        if (latestRel) {
+          const title = latestRel.name || latestRel.tag_name || "Latest Release";
+          const body = (latestRel.body || "").trim() || "Official ALPHA release — ready for download.";
+          notesEl.textContent = `${title} (${fmtDate(latestRel.published_at)})\n\n${body}`;
+        } else {
+          notesEl.textContent = "No public releases published yet. Once you create your first GitHub Release with the .exe and .apk files, release notes and direct download links appear here automatically.";
+        }
+      } catch (e) {
+        document.getElementById("win-meta").textContent = "Download directly from GitHub Releases.";
+        document.getElementById("and-meta").textContent = "Download directly from GitHub Releases.";
+        document.getElementById("release-notes").textContent = "Visit GitHub Releases to view full release history and downloads.";
+      }
+    })();
+  </script>
+</body>
+</html>
