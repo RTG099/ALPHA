@@ -1,120 +1,92 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" dir="ltr" data-theme="light">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" id="theme-color" content="#dfe5fd" />
+  <meta name="color-scheme" content="light dark" />
   <title>ALPHA — A media player for everything.</title>
-  <meta name="description" content="ALPHA Media Player for Windows and Android by RTG099. Local music, synced lyrics, RSS podcasts, and cinema in one clean, private, ad-free player." />
+  <meta name="description" id="meta-desc" content="ALPHA Media Player for Windows and Android by RTG099. Local music, synced lyrics, RSS podcasts, and cinema in one clean, private, ad-free player." />
   <link rel="icon" href="assets/alpha.ico" sizes="any" />
   <link rel="icon" type="image/png" href="assets/alpha.png" />
   <link rel="apple-touch-icon" href="assets/alpha.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    /* Apply saved theme + language before first paint (no wrong-mode flash on phones) */
+    (function () {
+      try {
+        var d = document.documentElement, p = new URLSearchParams(location.search);
+        var th = p.get("theme"); th = (th === "dark" || th === "light") ? th : localStorage.getItem("alpha_clean_theme");
+        if (th === "dark") d.setAttribute("data-theme", "dark");
+        var lg = p.get("lang"); lg = (lg === "ar" || lg === "en") ? lg : localStorage.getItem("alpha_lang");
+        if (lg === "ar") { d.setAttribute("lang", "ar"); d.setAttribute("dir", "rtl"); }
+      } catch (e) {}
+    })();
+  </script>
   <style>
     /* ==========================================================================
        ALPHA — Minimal Apple-Grade Frosted Glass Page
-       Light Mode Default · Optional Dark Mode
+       Light Mode Default · Optional Dark Mode · English / العربية
        Seamless Top-to-Bottom App Palette (Indigo -> Soft Pink -> Mint)
-       Clean Solid & Frosted Buttons · Collapsible Feature Architecture
        ========================================================================== */
     :root {
-      /* Continuous top-to-bottom gradient from the app icon colors + soft pink */
-      --bg-gradient: linear-gradient(
-        180deg,
-        #dfe5fd 0%,
-        #ebe3fb 28%,
-        #f7dfee 54%,
-        #e2f3f7 80%,
-        #ccf1ea 100%
-      );
-
-      /* True Frosted Glass Surfaces */
-      --glass-surface: linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.62) 0%,
-        rgba(255, 255, 255, 0.44) 100%
-      );
+      --bg-gradient: linear-gradient(180deg, #dfe5fd 0%, #ebe3fb 28%, #f7dfee 54%, #e2f3f7 80%, #ccf1ea 100%);
+      --glass-surface: linear-gradient(180deg, rgba(255, 255, 255, 0.62) 0%, rgba(255, 255, 255, 0.44) 100%);
       --glass-hover: rgba(255, 255, 255, 0.68);
       --glass-chip: rgba(255, 255, 255, 0.58);
       --nav-surface: rgba(255, 255, 255, 0.56);
-
       --border-light: rgba(255, 255, 255, 0.88);
       --border-divider: rgba(20, 24, 44, 0.07);
-      --specular:
-        inset 0 1px 0 rgba(255, 255, 255, 0.96),
-        inset 0 -1px 0 rgba(255, 255, 255, 0.36);
-      --shadow-soft:
-        0 24px 60px -16px rgba(24, 28, 62, 0.10),
-        0 4px 16px -2px rgba(24, 28, 62, 0.04);
-
-      /* Clean Editorial Typography */
+      --specular: inset 0 1px 0 rgba(255, 255, 255, 0.96), inset 0 -1px 0 rgba(255, 255, 255, 0.36);
+      --shadow-soft: 0 24px 60px -16px rgba(24, 28, 62, 0.10), 0 4px 16px -2px rgba(24, 28, 62, 0.04);
       --text-primary: #141624;
       --text-secondary: #4a4e66;
       --text-muted: #767b96;
-
-      /* Refined Buttons (Zero Clashing Rainbow Fills) */
       --btn-dark-bg: #161826;
       --btn-dark-hover: #23263a;
       --btn-dark-text: #ffffff;
       --btn-dark-shadow: 0 12px 28px -8px rgba(20, 22, 36, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.16);
-
       --btn-glass-bg: rgba(255, 255, 255, 0.66);
       --btn-glass-hover: rgba(255, 255, 255, 0.82);
       --btn-glass-text: #141624;
-
-      /* Subtle App Accent Tints */
       --tint-indigo: #5b62e8;
       --tint-mint: #169c8f;
       --icon-bg: rgba(91, 98, 232, 0.09);
       --icon-fg: #4b52d4;
+      --badge-bg: linear-gradient(135deg, rgba(91, 98, 232, 0.13), rgba(236, 85, 152, 0.10), rgba(22, 156, 143, 0.13));
+      --font-latin: "Plus Jakarta Sans", "IBM Plex Sans Arabic", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI Variable", sans-serif;
+      --font-arabic: "IBM Plex Sans Arabic", "Plus Jakarta Sans", -apple-system, "Segoe UI", Tahoma, sans-serif;
+      color-scheme: light;
     }
 
     html[data-theme="dark"] {
-      --bg-gradient: linear-gradient(
-        180deg,
-        #0c0f20 0%,
-        #151126 28%,
-        #1d1122 54%,
-        #0f1926 80%,
-        #091d20 100%
-      );
-
-      --glass-surface: linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.09) 0%,
-        rgba(255, 255, 255, 0.04) 100%
-      );
+      --bg-gradient: linear-gradient(180deg, #0c0f20 0%, #151126 28%, #1d1122 54%, #0f1926 80%, #091d20 100%);
+      --glass-surface: linear-gradient(180deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.04) 100%);
       --glass-hover: rgba(255, 255, 255, 0.11);
       --glass-chip: rgba(255, 255, 255, 0.07);
       --nav-surface: rgba(16, 18, 32, 0.60);
-
       --border-light: rgba(255, 255, 255, 0.14);
       --border-divider: rgba(255, 255, 255, 0.08);
-      --specular:
-        inset 0 1px 0 rgba(255, 255, 255, 0.18),
-        inset 0 -1px 0 rgba(255, 255, 255, 0.03);
-      --shadow-soft:
-        0 28px 68px -16px rgba(0, 0, 0, 0.60),
-        0 6px 20px -4px rgba(0, 0, 0, 0.35);
-
+      --specular: inset 0 1px 0 rgba(255, 255, 255, 0.18), inset 0 -1px 0 rgba(255, 255, 255, 0.03);
+      --shadow-soft: 0 28px 68px -16px rgba(0, 0, 0, 0.60), 0 6px 20px -4px rgba(0, 0, 0, 0.35);
       --text-primary: #f5f7ff;
       --text-secondary: #b4b9d2;
       --text-muted: #7f85a3;
-
       --btn-dark-bg: #f4f6ff;
       --btn-dark-hover: #ffffff;
       --btn-dark-text: #111320;
       --btn-dark-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.50);
-
       --btn-glass-bg: rgba(255, 255, 255, 0.09);
       --btn-glass-hover: rgba(255, 255, 255, 0.14);
       --btn-glass-text: #f5f7ff;
-
       --tint-indigo: #8d93ff;
       --tint-mint: #3ee0cf;
       --icon-bg: rgba(141, 147, 255, 0.13);
       --icon-fg: #a9adff;
+      --badge-bg: linear-gradient(135deg, rgba(141, 147, 255, 0.18), rgba(236, 85, 152, 0.14), rgba(62, 224, 207, 0.16));
+      color-scheme: dark;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -123,21 +95,29 @@
       overflow-x: clip;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      -webkit-tap-highlight-color: transparent;
     }
     body {
-      font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI Variable", sans-serif;
+      font-family: var(--font-latin);
       background: var(--bg-gradient);
       color: var(--text-primary);
       min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       flex-direction: column;
       position: relative;
       overflow-x: clip;
     }
+    html[lang="ar"] body { font-family: var(--font-arabic); }
+    /* Arabic letters must stay connected: never track Arabic text */
+    html[lang="ar"] body * { letter-spacing: 0 !important; }
     a { color: inherit; text-decoration: none; }
     button { font-family: inherit; }
+    code { font-family: ui-monospace, "SF Mono", Consolas, monospace; font-size: 0.86em; }
+    section[id] { scroll-margin-top: calc(env(safe-area-inset-top, 0px) + 88px); }
 
-    /* Seamless Full-Document Soft Diffusion (position: absolute — never clips at 100vh) */
     .ambient-wash {
       position: absolute;
       inset: 0;
@@ -150,18 +130,18 @@
         radial-gradient(50% 26% at 50% 92%, rgba(74, 212, 196, 0.22), transparent 78%);
     }
 
-    /* Top Minimal Frosted Capsule Bar */
+    /* ---------- Top frosted capsule bar ---------- */
     header {
       position: sticky;
-      top: 16px;
+      top: calc(env(safe-area-inset-top, 0px) + 16px);
       z-index: 40;
-      padding: 0 20px;
+      padding: 0 max(20px, env(safe-area-inset-right, 0px)) 0 max(20px, env(safe-area-inset-left, 0px));
     }
     .topbar {
       max-width: 780px;
       margin: 0 auto;
-      height: 48px;
-      padding: 0 8px 0 14px;
+      height: 50px;
+      padding-inline: 14px 8px;
       border-radius: 999px;
       background: var(--nav-surface);
       backdrop-filter: blur(36px) saturate(185%);
@@ -173,57 +153,56 @@
       justify-content: space-between;
       gap: 12px;
     }
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 9px;
-      font-size: 0.9rem;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-    }
-    .brand img {
-      width: 24px;
-      height: 24px;
-      border-radius: 6px;
-    }
-    .top-actions {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+    .brand { display: inline-flex; align-items: center; gap: 9px; font-size: 0.9rem; font-weight: 700; letter-spacing: -0.01em; flex-shrink: 0; }
+    .brand img { width: 24px; height: 24px; border-radius: 6px; }
+    .top-actions { display: flex; align-items: center; gap: 4px; }
     .top-link {
-      padding: 6px 12px;
+      padding: 7px 12px;
       border-radius: 999px;
       font-size: 0.8rem;
       font-weight: 500;
       color: var(--text-secondary);
+      white-space: nowrap;
       transition: color 0.18s ease, background 0.18s ease;
     }
-    .top-link:hover {
-      color: var(--text-primary);
-      background: var(--glass-chip);
-    }
-    .theme-btn {
-      height: 32px;
-      padding: 0 12px;
+    .top-link:hover { color: var(--text-primary); background: var(--glass-chip); }
+
+    .chip-btn {
+      height: 34px;
+      padding: 0 13px;
       border-radius: 999px;
       border: 1px solid var(--border-light);
       background: var(--glass-chip);
       color: var(--text-primary);
-      font-size: 0.77rem;
+      font-size: 0.78rem;
       font-weight: 600;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 6px;
+      flex-shrink: 0;
+      white-space: nowrap;
+      box-shadow: var(--specular);
+      touch-action: manipulation;
       transition: background 0.18s ease, transform 0.15s ease;
     }
-    .theme-btn:hover {
-      background: var(--glass-hover);
-      transform: translateY(-0.5px);
+    .chip-btn svg { flex-shrink: 0; display: block; }
+    .chip-btn:hover { background: var(--glass-hover); transform: translateY(-0.5px); }
+    .chip-btn:active { transform: scale(0.94); }
+    .theme-btn { min-width: 80px; }
+    .lang-btn { min-width: 92px; }
+    .lang-label { font-family: var(--font-arabic); }
+    html[lang="ar"] .lang-label { font-family: var(--font-latin); }
+    .lang-short { display: none; font-weight: 700; }
+
+    .chip-btn:focus-visible, .btn:focus-visible, .acc-trigger:focus-visible,
+    .expand-all-btn:focus-visible, .asset-dl:focus-visible, .ghost-btn:focus-visible {
+      outline: 2px solid var(--tint-indigo);
+      outline-offset: 2px;
     }
 
-    /* Main Column */
+    /* ---------- Main column ---------- */
     main {
       position: relative;
       z-index: 2;
@@ -237,20 +216,9 @@
       align-items: center;
     }
 
-    /* Centered Editorial Hero */
-    .hero {
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-      margin-bottom: 44px;
-    }
-    .logo-frame {
-      position: relative;
-      margin-bottom: 24px;
-      display: inline-flex;
-    }
+    /* ---------- Hero ---------- */
+    .hero { text-align: center; display: flex; flex-direction: column; align-items: center; width: 100%; margin-bottom: 44px; }
+    .logo-frame { position: relative; margin-bottom: 24px; display: inline-flex; }
     .logo-frame::before {
       content: "";
       position: absolute;
@@ -259,39 +227,27 @@
       background: linear-gradient(135deg, rgba(114, 122, 238, 0.34), rgba(238, 126, 180, 0.24), rgba(78, 218, 206, 0.34));
       filter: blur(20px);
     }
-    .logo-img {
-      position: relative;
-      width: 96px;
-      height: 96px;
-      border-radius: 23px;
-      box-shadow: 0 18px 40px -10px rgba(24, 28, 66, 0.26);
-    }
-
+    .logo-img { position: relative; width: 96px; height: 96px; border-radius: 23px; box-shadow: 0 18px 40px -10px rgba(24, 28, 66, 0.26); }
     .hero h1 {
       font-size: clamp(2.15rem, 5vw, 3.35rem);
       font-weight: 600;
       letter-spacing: -0.035em;
       line-height: 1.1;
-      color: var(--text-primary);
       margin-bottom: 14px;
+      text-wrap: balance;
     }
+    html[lang="ar"] .hero h1 { font-weight: 700; line-height: 1.3; }
     .hero-desc {
       font-size: clamp(0.98rem, 1.8vw, 1.12rem);
-      font-weight: 400;
       color: var(--text-secondary);
       max-width: 540px;
       line-height: 1.6;
       margin-bottom: 30px;
+      text-wrap: pretty;
     }
+    html[lang="ar"] .hero-desc { line-height: 1.85; }
 
-    /* Classy Solid Slate & Frosted Crystal Download Buttons */
-    .dl-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 12px;
-      margin-bottom: 14px;
-    }
+    .dl-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-bottom: 14px; }
     .btn {
       height: 46px;
       padding: 0 22px;
@@ -303,16 +259,13 @@
       font-size: 0.88rem;
       font-weight: 600;
       letter-spacing: -0.01em;
+      touch-action: manipulation;
       transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
     }
+    .btn svg { flex-shrink: 0; }
     .btn:hover { transform: translateY(-1.5px); }
-    .btn-primary {
-      background: var(--btn-dark-bg);
-      color: var(--btn-dark-text);
-      box-shadow: var(--btn-dark-shadow);
-    }
+    .btn-primary { background: var(--btn-dark-bg); color: var(--btn-dark-text); box-shadow: var(--btn-dark-shadow); }
     .btn-primary:hover { background: var(--btn-dark-hover); }
-
     .btn-secondary {
       background: var(--btn-glass-bg);
       color: var(--btn-glass-text);
@@ -323,24 +276,12 @@
     }
     .btn-secondary:hover { background: var(--btn-glass-hover); }
 
-    .version-line {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      font-weight: 500;
-    }
-    .version-line img {
-      width: 14px;
-      height: 14px;
-      border-radius: 3px;
-    }
+    .version-line { display: inline-flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 10px; font-size: 0.78rem; color: var(--text-muted); font-weight: 500; }
+    .all-versions { color: var(--icon-fg); font-weight: 600; white-space: nowrap; }
+    .all-versions:hover { text-decoration: underline; }
 
-    /* ==========================================================================
-       Frosted Glass Collapsible Stack ("What ALPHA Does")
-       ========================================================================== */
-    .collapsible-shell {
+    /* ---------- Frosted shells (shared) ---------- */
+    .glass {
       width: 100%;
       border-radius: 24px;
       background: var(--glass-surface);
@@ -348,205 +289,179 @@
       -webkit-backdrop-filter: blur(42px) saturate(190%);
       border: 1px solid var(--border-light);
       box-shadow: var(--shadow-soft), var(--specular);
-      overflow: hidden;
     }
 
-    .shell-header {
-      padding: 16px 22px;
-      border-bottom: 1px solid var(--border-divider);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-    .shell-title {
-      font-size: 0.78rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-    }
+    /* ---------- "What ALPHA Does" accordion ---------- */
+    .collapsible-shell { overflow: hidden; }
+    .shell-header { padding: 16px 22px; border-bottom: 1px solid var(--border-divider); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .shell-title { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); }
     .expand-all-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-secondary);
-      font-size: 0.78rem;
-      font-weight: 600;
-      cursor: pointer;
-      padding: 4px 8px;
-      border-radius: 8px;
+      background: transparent; border: none; color: var(--text-secondary);
+      font-size: 0.78rem; font-weight: 600; cursor: pointer; padding: 6px 10px; border-radius: 8px;
       transition: color 0.15s ease, background 0.15s ease;
     }
-    .expand-all-btn:hover {
-      color: var(--text-primary);
-      background: var(--glass-chip);
-    }
-
-    .acc-item {
-      border-bottom: 1px solid var(--border-divider);
-    }
-    .acc-item:last-child {
-      border-bottom: none;
-    }
-
+    .expand-all-btn:hover { color: var(--text-primary); background: var(--glass-chip); }
+    .acc-item { border-bottom: 1px solid var(--border-divider); }
+    .acc-item:last-child { border-bottom: none; }
     .acc-trigger {
-      width: 100%;
-      padding: 18px 22px;
-      background: transparent;
-      border: none;
-      color: var(--text-primary);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      text-align: left;
-      cursor: pointer;
+      width: 100%; padding: 18px 22px; background: transparent; border: none; color: var(--text-primary);
+      display: flex; align-items: center; justify-content: space-between; gap: 16px; text-align: start; cursor: pointer;
       transition: background 0.18s ease;
     }
-    .acc-trigger:hover {
-      background: var(--glass-hover);
+    .acc-trigger:hover { background: var(--glass-hover); }
+    .acc-left { display: flex; align-items: center; gap: 14px; min-width: 0; }
+    .icon-chip {
+      width: 34px; height: 34px; border-radius: 10px; background: var(--icon-bg); border: 1px solid var(--border-light);
+      color: var(--icon-fg); display: grid; place-items: center; flex-shrink: 0;
     }
-    .acc-left {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      min-width: 0;
-    }
-    .acc-icon {
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
-      background: var(--icon-bg);
-      border: 1px solid var(--border-light);
-      color: var(--icon-fg);
-      display: grid;
-      place-items: center;
-      flex-shrink: 0;
-    }
-    .acc-heading {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      min-width: 0;
-    }
-    .acc-heading strong {
-      font-size: 0.96rem;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-    }
-    .acc-heading span {
-      font-size: 0.81rem;
-      color: var(--text-muted);
-      font-weight: 400;
-    }
+    .acc-heading { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .acc-heading strong { font-size: 0.96rem; font-weight: 600; letter-spacing: -0.01em; }
+    .acc-heading span { font-size: 0.81rem; color: var(--text-muted); }
     .acc-chevron {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      background: var(--glass-chip);
-      border: 1px solid var(--border-light);
-      color: var(--text-secondary);
-      display: grid;
-      place-items: center;
-      flex-shrink: 0;
-      transition: transform 0.26s cubic-bezier(0.22, 1, 0.36, 1), background 0.18s ease;
+      width: 26px; height: 26px; border-radius: 50%; background: var(--glass-chip); border: 1px solid var(--border-light);
+      color: var(--text-secondary); display: grid; place-items: center; flex-shrink: 0;
+      transition: transform 0.26s cubic-bezier(0.22, 1, 0.36, 1);
     }
-    .acc-item.open .acc-chevron {
-      transform: rotate(180deg);
-    }
-
-    /* Smooth 60fps CSS Grid Height Collapse */
-    .acc-panel {
-      display: grid;
-      grid-template-rows: 0fr;
-      transition: grid-template-rows 0.28s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-    .acc-item.open .acc-panel {
-      grid-template-rows: 1fr;
-    }
-    .acc-inner {
-      overflow: hidden;
-    }
+    .acc-item.open .acc-chevron { transform: rotate(180deg); }
+    .acc-panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.28s cubic-bezier(0.22, 1, 0.36, 1); }
+    .acc-item.open .acc-panel { grid-template-rows: 1fr; }
+    .acc-inner { overflow: hidden; }
     .acc-body {
-      padding: 2px 22px 20px 70px;
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-      line-height: 1.65;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+      padding: 2px 22px 20px; padding-inline-start: 70px;
+      font-size: 0.9rem; color: var(--text-secondary); line-height: 1.65;
+      display: flex; flex-direction: column; gap: 12px;
     }
-    .pill-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px;
-    }
+    html[lang="ar"] .acc-body { line-height: 1.9; }
+    .pill-group { display: flex; flex-wrap: wrap; gap: 7px; }
     .spec-pill {
-      padding: 4px 11px;
-      border-radius: 999px;
-      background: var(--glass-chip);
-      border: 1px solid var(--border-light);
-      font-size: 0.75rem;
-      font-weight: 500;
-      color: var(--text-primary);
+      padding: 4px 11px; border-radius: 999px; background: var(--glass-chip); border: 1px solid var(--border-light);
+      font-size: 0.75rem; font-weight: 500; color: var(--text-primary);
     }
-    .release-row {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 12px 14px;
-      border-radius: 14px;
-      background: var(--glass-chip);
-      border: 1px solid var(--border-light);
-      font-size: 0.83rem;
-    }
-    .release-link {
-      font-weight: 600;
-      color: var(--icon-fg);
-    }
-    .release-link:hover { text-decoration: underline; }
 
-    /* Minimal Quiet Footer */
-    footer {
-      position: relative;
-      z-index: 2;
-      padding: 0 20px 36px;
+    /* ---------- Releases ---------- */
+    .releases { width: 100%; margin-top: 72px; }
+    .section-head { text-align: center; margin-bottom: 26px; display: flex; flex-direction: column; align-items: center; }
+    .eyebrow { font-size: 0.74rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--icon-fg); }
+    .section-head h2 {
+      font-size: clamp(1.75rem, 4.2vw, 2.35rem); font-weight: 600; letter-spacing: -0.03em; line-height: 1.15;
+      margin: 8px 0 10px; text-wrap: balance;
     }
+    html[lang="ar"] .section-head h2 { font-weight: 700; line-height: 1.35; }
+    .section-head p { color: var(--text-secondary); font-size: 0.98rem; line-height: 1.6; max-width: 480px; text-wrap: pretty; }
+    html[lang="ar"] .section-head p { line-height: 1.85; }
+
+    .rel-list { display: flex; flex-direction: column; gap: 14px; }
+    .rel-card { padding: 22px; animation: rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+    @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    .rel-head { display: flex; align-items: center; justify-content: space-between; gap: 10px 14px; flex-wrap: wrap; margin-bottom: 10px; }
+    .rel-title-wrap { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; min-width: 0; }
+    .rel-title { font-size: 1.12rem; font-weight: 700; letter-spacing: -0.02em; }
+    .rel-badge {
+      padding: 3px 10px; border-radius: 999px; background: var(--badge-bg); border: 1px solid var(--border-light);
+      color: var(--icon-fg); font-size: 0.72rem; font-weight: 700;
+    }
+    .rel-date { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+    .rel-notes { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.65; margin-bottom: 16px; }
+    html[lang="ar"] .rel-notes { line-height: 1.85; }
+    .rel-notes ul { padding-inline-start: 1.2em; display: flex; flex-direction: column; gap: 4px; }
+    .rel-notes p + p, .rel-notes p + ul, .rel-notes ul + p { margin-top: 8px; }
+    .rel-notes a { color: var(--icon-fg); text-decoration: underline; }
+    .rel-assets { display: flex; flex-direction: column; gap: 10px; }
+    .asset-row {
+      display: flex; align-items: center; gap: 12px; padding: 12px 12px; padding-inline-start: 14px;
+      border-radius: 16px; background: var(--glass-chip); border: 1px solid var(--border-light);
+    }
+    .asset-row .icon-chip { width: 38px; height: 38px; border-radius: 11px; }
+    .asset-meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+    .asset-meta strong { font-size: 0.9rem; font-weight: 600; }
+    .asset-meta span { font-size: 0.76rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .asset-dl {
+      height: 38px; padding: 0 16px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+      font-size: 0.82rem; font-weight: 600; flex-shrink: 0; touch-action: manipulation;
+      transition: transform 0.18s ease, background 0.18s ease;
+    }
+    .asset-dl:hover { transform: translateY(-1px); }
+    .asset-dl.primary { background: var(--btn-dark-bg); color: var(--btn-dark-text); box-shadow: var(--btn-dark-shadow); }
+    .asset-dl.primary:hover { background: var(--btn-dark-hover); }
+    .asset-dl.glass-btn { background: var(--btn-glass-bg); color: var(--btn-glass-text); border: 1px solid var(--border-light); box-shadow: var(--specular); }
+    .asset-dl.glass-btn:hover { background: var(--btn-glass-hover); }
+
+    .rel-more { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+    .ghost-btn {
+      height: 40px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--border-light); background: var(--glass-chip);
+      color: var(--text-secondary); font-size: 0.82rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 7px;
+      box-shadow: var(--specular); transition: background 0.18s ease, color 0.18s ease;
+    }
+    .ghost-btn:hover { background: var(--glass-hover); color: var(--text-primary); }
+    .rel-note-small { text-align: center; font-size: 0.76rem; color: var(--text-muted); margin-top: 14px; }
+
+    /* ---------- Footer ---------- */
+    footer { position: relative; z-index: 2; padding: 0 20px 36px; }
     .footer-line {
-      max-width: 780px;
-      margin: 0 auto;
-      padding: 14px 20px;
-      border-radius: 999px;
-      background: var(--nav-surface);
-      backdrop-filter: blur(32px) saturate(180%);
-      -webkit-backdrop-filter: blur(32px) saturate(180%);
-      border: 1px solid var(--border-light);
-      box-shadow: var(--specular);
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      font-size: 0.78rem;
-      color: var(--text-muted);
+      max-width: 780px; margin: 0 auto; padding: 14px 20px; border-radius: 999px; background: var(--nav-surface);
+      backdrop-filter: blur(32px) saturate(180%); -webkit-backdrop-filter: blur(32px) saturate(180%);
+      border: 1px solid var(--border-light); box-shadow: var(--specular);
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;
+      font-size: 0.78rem; color: var(--text-muted);
     }
-    .footer-links {
-      display: flex;
-      gap: 16px;
-      font-weight: 500;
-      color: var(--text-secondary);
-    }
+    .footer-links { display: flex; gap: 16px; font-weight: 500; color: var(--text-secondary); }
     .footer-links a:hover { color: var(--text-primary); }
 
+    /* Touch screens: no sticky hover lifts after a tap */
+    @media (hover: none) {
+      .btn:hover, .chip-btn:hover, .asset-dl:hover { transform: none; }
+      .acc-trigger:hover { background: transparent; }
+      .btn:active, .asset-dl:active { transform: scale(0.97); }
+    }
+
+    /* ---------- Phones ---------- */
     @media (max-width: 600px) {
-      main { padding: 38px 16px 48px; }
-      .dl-buttons { width: 100%; }
-      .dl-buttons .btn { width: 100%; }
-      .acc-trigger { padding: 16px; }
-      .acc-body { padding: 0 16px 18px 16px; }
-      .footer-line { border-radius: 18px; justify-content: center; text-align: center; }
+      header {
+        top: calc(env(safe-area-inset-top, 0px) + 10px);
+        padding: 0 max(12px, env(safe-area-inset-right, 0px)) 0 max(12px, env(safe-area-inset-left, 0px));
+      }
+      .topbar { height: 54px; padding-inline: 14px 7px; gap: 8px; }
+      .brand { font-size: 0.95rem; }
+      .brand img { width: 26px; height: 26px; }
+      .top-actions { gap: 4px; }
+      .top-link { padding: 9px 10px; font-size: 0.86rem; }
+      .top-link.desktop-only { display: none; }
+      /* Round icon-only switches with a full 40px tap target */
+      .chip-btn { width: 40px; min-width: 40px; height: 40px; padding: 0; gap: 0; }
+      .theme-btn svg { width: 18px; height: 18px; }
+      .theme-label, .lang-label, .lang-globe { display: none; }
+      .lang-short { display: inline; font-size: 0.86rem; }
+
+      main { padding: 36px max(18px, env(safe-area-inset-right, 0px)) 48px max(18px, env(safe-area-inset-left, 0px)); }
+      .logo-frame { margin-bottom: 22px; }
+      .logo-img { width: 84px; height: 84px; border-radius: 20px; }
+      .hero { margin-bottom: 36px; }
+      .hero h1 { font-size: clamp(2rem, 9.4vw, 2.6rem); margin-bottom: 12px; }
+      .hero-desc { font-size: 1rem; margin-bottom: 26px; }
+      .dl-buttons { width: 100%; flex-direction: column; gap: 10px; }
+      .dl-buttons .btn { width: 100%; height: 52px; font-size: 0.95rem; }
+      .version-line { font-size: 0.74rem; line-height: 1.55; max-width: 330px; text-align: center; }
+
+      .glass { border-radius: 22px; }
+      .shell-header { padding: 14px 16px; }
+      .acc-trigger { padding: 16px; gap: 12px; }
+      .acc-left { gap: 12px; }
+      .acc-body { padding: 0 16px 18px; padding-inline-start: 16px; font-size: 0.92rem; }
+
+      .releases { margin-top: 56px; }
+      .rel-card { padding: 18px 16px; }
+      .rel-title { font-size: 1.05rem; }
+      .asset-row { gap: 10px; padding: 10px; padding-inline-start: 12px; }
+      .asset-row .icon-chip { width: 36px; height: 36px; }
+      .asset-dl { width: 42px; height: 42px; padding: 0; }
+      .asset-dl .dl-text { display: none; }
+
+      footer { padding: 0 max(12px, env(safe-area-inset-right, 0px)) calc(env(safe-area-inset-bottom, 0px) + 24px) max(12px, env(safe-area-inset-left, 0px)); }
+      .footer-line { border-radius: 20px; flex-direction: column; justify-content: center; text-align: center; gap: 8px; }
+    }
+    @media (max-width: 350px) {
+      .hero h1 { font-size: 1.85rem; }
+      .top-link { padding: 9px 7px; }
     }
   </style>
 </head>
@@ -560,29 +475,30 @@
         <span>ALPHA</span>
       </a>
       <div class="top-actions">
-        <a class="top-link" href="https://github.com/RTG099/ALPHA/releases" target="_blank" rel="noopener">Releases</a>
-        <a class="top-link" href="https://github.com/RTG099/ALPHA" target="_blank" rel="noopener">GitHub</a>
-        <button class="theme-btn" id="theme-toggle" type="button" aria-label="Toggle Light or Dark mode">
-          <svg id="sun-ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
-          <svg id="moon-ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-          <span id="theme-text">Light</span>
+        <a class="top-link desktop-only" href="#features" data-i18n="nav.features">Features</a>
+        <a class="top-link" href="#releases" data-i18n="nav.releases">Releases</a>
+        <button class="chip-btn lang-btn" id="lang-toggle" type="button">
+          <svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <span class="lang-label" id="lang-label">العربية</span>
+          <span class="lang-short" id="lang-short">ع</span>
+        </button>
+        <button class="chip-btn theme-btn" id="theme-toggle" type="button">
+          <svg id="sun-ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true" style="display:none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          <svg id="moon-ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <span id="theme-text" class="theme-label">Dark</span>
         </button>
       </div>
     </nav>
   </header>
 
   <main>
-    <!-- Centered Minimal Hero -->
+    <!-- Hero -->
     <section class="hero">
       <div class="logo-frame">
         <img src="assets/alpha.png" alt="ALPHA Media Player" class="logo-img" />
       </div>
-
-      <h1>A media player for everything.</h1>
-
-      <p class="hero-desc">
-        Local music, synced lyrics, podcasts, and cinema—crafted into one calm, private, ad-free experience for Windows and Android.
-      </p>
+      <h1 data-i18n="hero.title">A media player for everything.</h1>
+      <p class="hero-desc" data-i18n="hero.desc">Local music, synced lyrics, podcasts, and cinema—crafted into one calm, private, ad-free experience for Windows and Android.</p>
 
       <div class="dl-buttons">
         <a class="btn btn-primary" id="win-btn" href="https://github.com/RTG099/ALPHA/releases/download/v2.0.0/ALPHA-Setup-1.3.1.exe">
@@ -596,332 +512,497 @@
       </div>
 
       <div class="version-line">
-        <img src="assets/alpha.ico" alt="" />
         <span id="version-meta">Windows 10/11 (v1.3.1 · 97.5 MB) · Android 8.0+ (v1.4.1 · 14.6 MB)</span>
+        <a class="all-versions" href="#releases" data-i18n="hero.all">All versions →</a>
       </div>
     </section>
 
-    <!-- Collapsible Frosted Glass Overview -->
-    <section class="collapsible-shell" aria-label="What ALPHA does">
+    <!-- What ALPHA Does -->
+    <section class="glass collapsible-shell" id="features" aria-label="What ALPHA does">
       <div class="shell-header">
-        <span class="shell-title">What ALPHA Does</span>
+        <span class="shell-title" data-i18n="feat.title">What ALPHA Does</span>
         <button class="expand-all-btn" id="toggle-all" type="button">Expand all</button>
       </div>
 
-      <!-- 1. Music & Synced Lyrics -->
       <div class="acc-item open">
         <button class="acc-trigger" type="button" aria-expanded="true">
           <div class="acc-left">
-            <div class="acc-icon" aria-hidden="true">
+            <div class="icon-chip" aria-hidden="true">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
             </div>
             <div class="acc-heading">
-              <strong>Music, Smart Playlists &amp; Synced Lyrics</strong>
-              <span>Lossless playback, neighbor-art carousel, and live timed lyrics</span>
+              <strong data-i18n="f1.h">Music, Smart Playlists &amp; Synced Lyrics</strong>
+              <span data-i18n="f1.s">Lossless playback, neighbor-art carousel, and live timed lyrics</span>
             </div>
           </div>
-          <span class="acc-chevron" aria-hidden="true">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-          </span>
+          <span class="acc-chevron" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
         </button>
-        <div class="acc-panel">
-          <div class="acc-inner">
-            <div class="acc-body">
-              <p>Plays 19 audio formats natively with gapless transitions, sliding neighbor cover art, dynamic cover-matched accents, sidebar pinning, an integrated metadata tag editor, and synced lyrics from LRCLIB, local <code>.lrc</code> files, or embedded tags.</p>
-              <div class="pill-group">
-                <span class="spec-pill">FLAC · WAV · ALAC · OPUS · MP3 · M4A</span>
-                <span class="spec-pill">5 Built-in Smart Playlists</span>
-                <span class="spec-pill">LRCLIB &amp; Local .LRC</span>
-              </div>
-            </div>
+        <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+          <p data-i18n="f1.p">Plays 19 audio formats natively with gapless transitions, sliding neighbor cover art, dynamic cover-matched accents, sidebar pinning, an integrated metadata tag editor, and synced lyrics from LRCLIB, local <code>.lrc</code> files, or embedded tags.</p>
+          <div class="pill-group">
+            <span class="spec-pill">FLAC · WAV · ALAC · OPUS · MP3 · M4A</span>
+            <span class="spec-pill" data-i18n="f1.p2">5 Built-in Smart Playlists</span>
+            <span class="spec-pill" data-i18n="f1.p3">LRCLIB &amp; Local .LRC</span>
           </div>
-        </div>
+        </div></div></div>
       </div>
 
-      <!-- 2. Movies, TV Shows & Smart Subtitles -->
       <div class="acc-item">
         <button class="acc-trigger" type="button" aria-expanded="false">
           <div class="acc-left">
-            <div class="acc-icon" aria-hidden="true">
+            <div class="icon-chip" aria-hidden="true">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="15" x="2" y="3" rx="2"/><polyline points="17 2 12 7 7 2"/></svg>
             </div>
             <div class="acc-heading">
-              <strong>Movies, TV Shows &amp; Smart Subtitles</strong>
-              <span>20 video formats, SubSource matching, custom seek, and 2× hold boost</span>
+              <strong data-i18n="f2.h">Movies, TV Shows &amp; Smart Subtitles</strong>
+              <span data-i18n="f2.s">20 video formats, SubSource matching, custom seek, and 2× hold boost</span>
             </div>
           </div>
-          <span class="acc-chevron" aria-hidden="true">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-          </span>
+          <span class="acc-chevron" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
         </button>
-        <div class="acc-panel">
-          <div class="acc-inner">
-            <div class="acc-body">
-              <p>Organizes your Movies &amp; TV folders with spacious cards, Continue Watching progress, and automatic download tabs (TikTok, YouTube, Instagram, Telegram). Includes episode-accurate SubSource subtitle search, hover keyframe scene previews, configurable 1s–120s seek steps, and press-and-hold anywhere on the video for instant 2× speed.</p>
-              <div class="pill-group">
-                <span class="spec-pill">MKV · MP4 · WEBM · AVI · MOV</span>
-                <span class="spec-pill">SubSource Subtitle Search</span>
-                <span class="spec-pill">1s–120s Custom Seek</span>
-                <span class="spec-pill">Full-Window 2× Hold</span>
-              </div>
-            </div>
+        <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+          <p data-i18n="f2.p">Organizes your Movies &amp; TV folders with spacious cards, Continue Watching progress, and automatic download tabs (TikTok, YouTube, Instagram, Telegram). Includes episode-accurate SubSource subtitle search, hover keyframe scene previews, configurable 1s–120s seek steps, and press-and-hold anywhere on the video for instant 2× speed.</p>
+          <div class="pill-group">
+            <span class="spec-pill">MKV · MP4 · WEBM · AVI · MOV</span>
+            <span class="spec-pill" data-i18n="f2.p2">SubSource Subtitle Search</span>
+            <span class="spec-pill" data-i18n="f2.p3">1s–120s Custom Seek</span>
+            <span class="spec-pill" data-i18n="f2.p4">Full-Window 2× Hold</span>
           </div>
-        </div>
+        </div></div></div>
       </div>
 
-      <!-- 3. Audio & Video Podcasts -->
       <div class="acc-item">
         <button class="acc-trigger" type="button" aria-expanded="false">
           <div class="acc-left">
-            <div class="acc-icon" aria-hidden="true">
+            <div class="icon-chip" aria-hidden="true">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
             </div>
             <div class="acc-heading">
-              <strong>Audio &amp; Video Podcasts (RSS)</strong>
-              <span>Direct RSS subscriptions, offline downloads, and per-show speed memory</span>
+              <strong data-i18n="f3.h">Audio &amp; Video Podcasts (RSS)</strong>
+              <span data-i18n="f3.s">Direct RSS subscriptions, offline downloads, and per-show speed memory</span>
             </div>
           </div>
-          <span class="acc-chevron" aria-hidden="true">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-          </span>
+          <span class="acc-chevron" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
         </button>
-        <div class="acc-panel">
-          <div class="acc-inner">
-            <div class="acc-body">
-              <p>Subscribe to any podcast RSS URL with dedicated views for audio and video episodes. Stream immediately, download episodes for offline listening, auto-save new episodes on sync, or switch video podcasts into audio-only cover mode—while remembering your preferred speed for every show.</p>
-              <div class="pill-group">
-                <span class="spec-pill">Audio &amp; Video RSS</span>
-                <span class="spec-pill">Offline Episode Cache</span>
-                <span class="spec-pill">Per-Show Speed Memory</span>
-              </div>
-            </div>
+        <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+          <p data-i18n="f3.p">Subscribe to any podcast RSS URL with dedicated views for audio and video episodes. Stream immediately, download episodes for offline listening, auto-save new episodes on sync, or switch video podcasts into audio-only cover mode—while remembering your preferred speed for every show.</p>
+          <div class="pill-group">
+            <span class="spec-pill" data-i18n="f3.p1">Audio &amp; Video RSS</span>
+            <span class="spec-pill" data-i18n="f3.p2">Offline Episode Cache</span>
+            <span class="spec-pill" data-i18n="f3.p3">Per-Show Speed Memory</span>
           </div>
-        </div>
+        </div></div></div>
       </div>
 
-      <!-- 4. Equalizer, AutoEQ & Audio Engine -->
       <div class="acc-item">
         <button class="acc-trigger" type="button" aria-expanded="false">
           <div class="acc-left">
-            <div class="acc-icon" aria-hidden="true">
+            <div class="icon-chip" aria-hidden="true">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" x2="4" y1="21" y2="14"/><line x1="4" x2="4" y1="10" y2="3"/><line x1="12" x2="12" y1="21" y2="12"/><line x1="12" x2="12" y1="8" y2="3"/><line x1="20" x2="20" y1="21" y2="16"/><line x1="20" x2="20" y1="12" y2="3"/></svg>
             </div>
             <div class="acc-heading">
-              <strong>Studio Equalizer, AutoEQ &amp; -14 LUFS</strong>
-              <span>Headphone profile import, loudness normalization, and async engine</span>
+              <strong data-i18n="f4.h">Studio Equalizer, AutoEQ &amp; -14 LUFS</strong>
+              <span data-i18n="f4.s">Headphone profile import, loudness normalization, and async engine</span>
             </div>
           </div>
-          <span class="acc-chevron" aria-hidden="true">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-          </span>
+          <span class="acc-chevron" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
         </button>
-        <div class="acc-panel">
-          <div class="acc-inner">
-            <div class="acc-body">
-              <p>Windows features a 10-band graphic EQ, Equalizer APO <code>ParametricEQ.txt</code> headphone profile import, smooth -14 LUFS loudness normalization, and a dedicated worker-thread libVLC engine that never stalls during rapid song-to-video switching. Android pairs Media3 ExoPlayer with a 5-band hardware EQ and loudness enhancer.</p>
-              <div class="pill-group">
-                <span class="spec-pill">10-Band Desktop EQ + AutoEQ</span>
-                <span class="spec-pill">-14 LUFS Normalization</span>
-                <span class="spec-pill">Zero-Freeze Worker Engine</span>
-              </div>
-            </div>
+        <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+          <p data-i18n="f4.p">Windows features a 10-band graphic EQ, Equalizer APO <code>ParametricEQ.txt</code> headphone profile import, smooth -14 LUFS loudness normalization, and a dedicated worker-thread libVLC engine that never stalls during rapid song-to-video switching. Android pairs Media3 ExoPlayer with a 5-band hardware EQ and loudness enhancer.</p>
+          <div class="pill-group">
+            <span class="spec-pill" data-i18n="f4.p1">10-Band Desktop EQ + AutoEQ</span>
+            <span class="spec-pill" data-i18n="f4.p2">-14 LUFS Normalization</span>
+            <span class="spec-pill" data-i18n="f4.p3">Zero-Freeze Worker Engine</span>
           </div>
-        </div>
+        </div></div></div>
       </div>
 
-      <!-- 5. Bilingual English / Arabic & Themes -->
       <div class="acc-item">
         <button class="acc-trigger" type="button" aria-expanded="false">
           <div class="acc-left">
-            <div class="acc-icon" aria-hidden="true">
+            <div class="icon-chip" aria-hidden="true">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
             </div>
             <div class="acc-heading">
-              <strong>English, Live Arabic RTL &amp; 5 Themes</strong>
-              <span>Instant language switching, custom accents, mini-player, and mobile list control</span>
+              <strong data-i18n="f5.h">English, Live Arabic RTL &amp; 5 Themes</strong>
+              <span data-i18n="f5.s">Instant language switching, custom accents, mini-player, and mobile list control</span>
             </div>
           </div>
-          <span class="acc-chevron" aria-hidden="true">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-          </span>
+          <span class="acc-chevron" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
         </button>
-        <div class="acc-panel">
-          <div class="acc-inner">
-            <div class="acc-body">
-              <p>Defaults to English with instant live switching to full right-to-left Arabic (العربية) in Settings while keeping playback timelines centered. Choose from Dark, Midnight, Nebula, Forest, and Light themes, floating desktop mini-player, global media keys, and long-press hold-to-delete across all Android lists with one-tap restore.</p>
-              <div class="pill-group">
-                <span class="spec-pill">English &amp; العربية RTL</span>
-                <span class="spec-pill">5 Live Themes + Beat Glow</span>
-                <span class="spec-pill">Android Hold-to-Delete</span>
-              </div>
-            </div>
+        <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+          <p data-i18n="f5.p">Defaults to English with instant live switching to full right-to-left Arabic (العربية) in Settings while keeping playback timelines centered. Choose from Dark, Midnight, Nebula, Forest, and Light themes, a floating desktop mini-player, global media keys, and long-press hold-to-delete across all Android lists with one-tap restore.</p>
+          <div class="pill-group">
+            <span class="spec-pill" data-i18n="f5.p1">English &amp; العربية RTL</span>
+            <span class="spec-pill" data-i18n="f5.p2">5 Live Themes + Beat Glow</span>
+            <span class="spec-pill" data-i18n="f5.p3">Android Hold-to-Delete</span>
           </div>
-        </div>
+        </div></div></div>
       </div>
+    </section>
 
-      <!-- 6. Latest Release & Automatic Updates -->
-      <div class="acc-item">
-        <button class="acc-trigger" type="button" aria-expanded="false">
-          <div class="acc-left">
-            <div class="acc-icon" aria-hidden="true">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-            </div>
-            <div class="acc-heading">
-              <strong id="rel-heading">Latest Release &amp; Built-In Auto-Updater</strong>
-              <span id="rel-sub">Synced directly with github.com/RTG099/ALPHA</span>
-            </div>
-          </div>
-          <span class="acc-chevron" aria-hidden="true">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-          </span>
-        </button>
-        <div class="acc-panel">
-          <div class="acc-inner">
-            <div class="acc-body">
-              <p id="rel-notes">ALPHA v2.0.0 — Introducing Arabic language and some minor fixes. Both apps automatically check for new versions on launch (GitHub Releases on Windows &amp; sideloaded Android, plus Google Play In-App Updates).</p>
-              <div class="release-row">
-                <span id="rel-files">ALPHA-Setup-1.3.1.exe (97.5 MB) · ALPHA-Android-1.4.1.apk (14.6 MB)</span>
-                <a class="release-link" href="https://github.com/RTG099/ALPHA/releases" target="_blank" rel="noopener">View all releases →</a>
-              </div>
-            </div>
-          </div>
-        </div>
+    <!-- Releases (all versions, downloadable right here) -->
+    <section class="releases" id="releases" aria-labelledby="rel-h2">
+      <div class="section-head">
+        <span class="eyebrow" data-i18n="rel.eyebrow">Releases</span>
+        <h2 id="rel-h2" data-i18n="rel.title">Every version, right here.</h2>
+        <p data-i18n="rel.desc">Download any version of ALPHA directly from this page. Both apps also check for updates automatically on launch.</p>
       </div>
+      <div class="rel-list" id="rel-list"></div>
+      <div class="rel-more" id="rel-more" hidden>
+        <button class="ghost-btn" id="rel-toggle" type="button"></button>
+      </div>
+      <p class="rel-note-small" id="rel-note" data-i18n="rel.note">Windows: run the installer. Android: open the APK and allow installs from your browser.</p>
     </section>
   </main>
 
   <footer>
     <div class="footer-line">
-      <span>ALPHA Media Player · Created by RTG099</span>
+      <span data-i18n="foot.by">ALPHA Media Player · Created by RTG099</span>
       <div class="footer-links">
-        <a href="https://github.com/RTG099/ALPHA" target="_blank" rel="noopener">Repository</a>
-        <a href="https://github.com/RTG099/ALPHA/releases" target="_blank" rel="noopener">Releases</a>
+        <a href="https://github.com/RTG099/ALPHA" target="_blank" rel="noopener" data-i18n="foot.repo">Repository</a>
+        <a href="#releases" data-i18n="nav.releases">Releases</a>
         <a href="https://github.com/RTG099" target="_blank" rel="noopener">RTG099</a>
       </div>
     </div>
   </footer>
 
   <script>
-    /* 1. Light Mode Default + Optional Dark Mode */
-    (function () {
-      const root = document.documentElement;
-      const btn = document.getElementById("theme-toggle");
-      const sun = document.getElementById("sun-ic");
-      const moon = document.getElementById("moon-ic");
-      const text = document.getElementById("theme-text");
-      const KEY = "alpha_clean_theme";
+    /* =========================================================
+       Translations
+       ========================================================= */
+    const AR = {
+      "nav.features": "المميزات",
+      "nav.releases": "الإصدارات",
+      "hero.title": "مشغّل وسائط لكل شيء.",
+      "hero.desc": "موسيقاك المحلية، والكلمات المتزامنة، والبودكاست، والأفلام — في تجربة واحدة هادئة وخاصة وخالية من الإعلانات على ويندوز وأندرويد.",
+      "hero.all": "كل الإصدارات ←",
+      "feat.title": "ماذا يقدّم ALPHA",
+      "f1.h": "الموسيقى وقوائم التشغيل الذكية والكلمات المتزامنة",
+      "f1.s": "تشغيل بلا فقدان للجودة، وأغلفة مجاورة متحركة، وكلمات متزامنة مباشرة",
+      "f1.p": "يشغّل 19 صيغة صوتية بشكل أصلي مع انتقالات سلسة بلا فواصل، وأغلفة مجاورة منزلقة، وألوان تتناسق تلقائيًا مع الغلاف، وتثبيت في الشريط الجانبي، ومحرر مدمج لبيانات الأغاني، وكلمات متزامنة من LRCLIB أو ملفات <code dir=\"ltr\">.lrc</code> المحلية أو الوسوم المضمّنة.",
+      "f1.p2": "5 قوائم تشغيل ذكية مدمجة",
+      "f1.p3": "LRCLIB وملفات ‎.LRC المحلية",
+      "f2.h": "الأفلام والمسلسلات والترجمات الذكية",
+      "f2.s": "20 صيغة فيديو، ومطابقة ترجمات SubSource، وقفزات مخصصة، وتسريع 2× بالضغط المطوّل",
+      "f2.p": "ينظّم مجلدات الأفلام والمسلسلات في بطاقات واسعة مع متابعة المشاهدة، وتبويبات تلقائية للتنزيلات (TikTok وYouTube وInstagram وTelegram). ويتضمن بحثًا دقيقًا عن ترجمة كل حلقة عبر SubSource، ومعاينة المشاهد عند التمرير، وخطوات تقديم قابلة للضبط من 1 إلى 120 ثانية، واضغط مطوّلًا في أي مكان على الفيديو لتسريع فوري 2×.",
+      "f2.p2": "بحث ترجمات SubSource",
+      "f2.p3": "قفزات مخصصة من 1 إلى 120 ثانية",
+      "f2.p4": "تسريع 2× بالضغط على كامل النافذة",
+      "f3.h": "البودكاست الصوتي والمرئي (RSS)",
+      "f3.s": "اشتراكات RSS مباشرة، وتنزيل للاستماع دون اتصال، وحفظ السرعة لكل برنامج",
+      "f3.p": "اشترك في أي رابط RSS لبودكاست مع واجهات مخصصة للحلقات الصوتية والمرئية. شغّل فورًا، أو نزّل الحلقات للاستماع دون اتصال، أو احفظ الحلقات الجديدة تلقائيًا عند المزامنة، أو حوّل بودكاست الفيديو إلى وضع صوتي مع الغلاف — مع تذكّر سرعتك المفضلة لكل برنامج.",
+      "f3.p1": "RSS صوتي ومرئي",
+      "f3.p2": "حفظ الحلقات دون اتصال",
+      "f3.p3": "ذاكرة السرعة لكل برنامج",
+      "f4.h": "معادل صوت احترافي وAutoEQ و‎-14 LUFS",
+      "f4.s": "استيراد ملفات تعريف السماعات، وتسوية مستوى الصوت، ومحرك تشغيل غير متزامن",
+      "f4.p": "يوفّر إصدار ويندوز معادل صوت رسوميًا من 10 نطاقات، واستيراد ملفات <code dir=\"ltr\">ParametricEQ.txt</code> من Equalizer APO، وتسوية سلسة لمستوى الصوت عند ‎-14 LUFS، ومحرك libVLC يعمل في خيط مستقل فلا يتجمّد أبدًا عند التنقل السريع بين الأغاني والفيديو. أما أندرويد فيجمع Media3 ExoPlayer مع معادل صوت من 5 نطاقات ومحسّن لمستوى الصوت.",
+      "f4.p1": "معادل 10 نطاقات + AutoEQ",
+      "f4.p2": "تسوية ‎-14 LUFS",
+      "f4.p3": "محرك تشغيل بلا تجمّد",
+      "f5.h": "الإنجليزية والعربية المباشرة و5 سمات",
+      "f5.s": "تبديل فوري للغة، وألوان مخصصة، ومشغّل مصغّر، وتحكم بالقوائم على الجوال",
+      "f5.p": "يبدأ بالإنجليزية مع تبديل فوري إلى العربية بالكامل من اليمين إلى اليسار من الإعدادات، مع إبقاء شريط التشغيل في المنتصف. اختر من بين سمات Dark وMidnight وNebula وForest وLight، مع مشغّل مصغّر عائم على سطح المكتب، ومفاتيح الوسائط العامة، والضغط المطوّل للحذف في كل قوائم أندرويد مع استعادة بلمسة واحدة.",
+      "f5.p1": "English والعربية RTL",
+      "f5.p2": "5 سمات مباشرة + توهّج الإيقاع",
+      "f5.p3": "الضغط المطوّل للحذف على أندرويد",
+      "rel.eyebrow": "الإصدارات",
+      "rel.title": "كل إصدار، هنا مباشرة.",
+      "rel.desc": "نزّل أي إصدار من ALPHA مباشرة من هذه الصفحة. ويتحقق التطبيقان من التحديثات تلقائيًا عند التشغيل.",
+      "rel.note": "ويندوز: شغّل ملف التثبيت. أندرويد: افتح ملف APK واسمح بالتثبيت من متصفحك.",
+      "foot.by": "ALPHA Media Player · من تطوير RTG099",
+      "foot.repo": "المستودع"
+    };
 
-      function apply(mode) {
-        const dark = mode === "dark";
-        root.setAttribute("data-theme", dark ? "dark" : "light");
-        sun.style.display = dark ? "none" : "block";
-        moon.style.display = dark ? "block" : "none";
-        text.textContent = dark ? "Dark" : "Light";
+    const UI = {
+      en: {
+        dark: "Dark", light: "Light", toDark: "Switch to dark mode", toLight: "Switch to light mode",
+        langLabel: "العربية", langShort: "ع", langAria: "عرض الموقع بالعربية",
+        dlWin: "Download for Windows", dlAnd: "Download for Android",
+        meta: "Windows 10/11 ({wv} · {ws}) · Android 8.0+ ({av} · {as})",
+        latest: "Latest", download: "Download", win: "Windows 10/11", and: "Android 8.0+", file: "File",
+        mb: "MB", older: "Show older versions ({n})", fewer: "Hide older versions",
+        expandAll: "Expand all", collapseAll: "Collapse all", dlAria: "Download {f}",
+        title: "ALPHA — A media player for everything.",
+        desc: "ALPHA Media Player for Windows and Android by RTG099. Local music, synced lyrics, RSS podcasts, and cinema in one clean, private, ad-free player.",
+        locale: "en-US"
+      },
+      ar: {
+        dark: "داكن", light: "فاتح", toDark: "التبديل إلى الوضع الداكن", toLight: "التبديل إلى الوضع الفاتح",
+        langLabel: "English", langShort: "EN", langAria: "View the site in English",
+        dlWin: "تنزيل لويندوز", dlAnd: "تنزيل لأندرويد",
+        meta: "ويندوز 10/11 ({wv} · {ws}) · أندرويد 8.0+ ({av} · {as})",
+        latest: "الأحدث", download: "تنزيل", win: "ويندوز 10/11", and: "أندرويد 8.0+", file: "ملف",
+        mb: "ميغابايت", older: "عرض الإصدارات الأقدم ({n})", fewer: "إخفاء الإصدارات الأقدم",
+        expandAll: "توسيع الكل", collapseAll: "طي الكل", dlAria: "تنزيل {f}",
+        title: "ALPHA — مشغّل وسائط لكل شيء.",
+        desc: "مشغّل الوسائط ALPHA لويندوز وأندرويد من RTG099. موسيقى محلية وكلمات متزامنة وبودكاست وأفلام في مشغّل واحد أنيق وخاص وخالٍ من الإعلانات.",
+        locale: "ar-u-nu-latn"
       }
+    };
 
-      let saved = "light";
-      try {
-        const q = new URLSearchParams(location.search).get("theme");
-        if (q === "dark" || q === "light") saved = q;
-        else {
-          const v = localStorage.getItem(KEY);
-          if (v === "dark" || v === "light") saved = v;
+    /* Arabic versions of the known GitHub release notes */
+    const NOTES_AR = {
+      "v2.0.0": "إضافة اللغة العربية وبعض الإصلاحات البسيطة.",
+      "v1.0": "الإصدار الأول."
+    };
+
+    const root = document.documentElement;
+    let LANG = root.getAttribute("lang") === "ar" ? "ar" : "en";
+    const t = (k, vars) => {
+      let s = (UI[LANG] && UI[LANG][k]) || UI.en[k] || k;
+      if (vars) for (const v in vars) s = s.split("{" + v + "}").join(vars[v]);
+      return s;
+    };
+    const bdi = (s) => `<bdi>${esc(s)}</bdi>`;
+    function esc(s) { return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+
+    /* Cache the English markup once so switching back is exact */
+    const i18nEls = Array.from(document.querySelectorAll("[data-i18n]"));
+    i18nEls.forEach((el) => { el._en = el.innerHTML; });
+
+    /* =========================================================
+       Release data (live from GitHub, with built-in fallback)
+       ========================================================= */
+    const FALLBACK = [
+      { tag: "v2.0.0", name: "ALPHA v2.0.0", date: "2026-11-24T22:17:35Z", body: "Introducing Arabic language and some minor fixes.",
+        assets: [
+          { name: "ALPHA-Setup-1.3.1.exe", size: 102267195, url: "https://github.com/RTG099/ALPHA/releases/download/v2.0.0/ALPHA-Setup-1.3.1.exe" },
+          { name: "ALPHA-Android-1.4.1.apk", size: 15358479, url: "https://github.com/RTG099/ALPHA/releases/download/v2.0.0/ALPHA-Android-1.4.1.apk" }
+        ] },
+      { tag: "v1.0", name: "ALPHA v1.0.0", date: "2026-11-23T17:31:35Z", body: "Initial Release",
+        assets: [
+          { name: "ALPHA-Setup-1.3.0.exe", size: 102242715, url: "https://github.com/RTG099/ALPHA/releases/download/v1.0/ALPHA-Setup-1.3.0.exe" },
+          { name: "ALPHA-Android-1.4.0.apk", size: 15100294, url: "https://github.com/RTG099/ALPHA/releases/download/v1.0/ALPHA-Android-1.4.0.apk" }
+        ] }
+    ];
+    let RELEASES = FALLBACK;
+    let showOlder = false;
+    const VISIBLE = 3;
+
+    const ICONS = {
+      win: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5.55 10.35 4.5v7.1H3V5.55zm0 12.9 7.35 1.05v-7.05H3v6zm8.25 1.18L21 21v-8.55h-9.75v7.18zm0-15.26v7.23H21V3l-9.75 1.37z"/></svg>',
+      and: '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.6 9.48 19.44 6.3a.45.45 0 1 0-.78-.45l-1.88 3.25a11.3 11.3 0 0 0-9.56 0L5.34 5.85a.45.45 0 1 0-.78.45L6.4 9.48A10.7 10.7 0 0 0 1 18h22a10.7 10.7 0 0 0-5.4-8.52zM7 15.25a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5zm10 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5z"/></svg>',
+      file: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
+      dl: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><polyline points="7 10.5 12 15.5 17 10.5"/><path d="M5 20h14"/></svg>',
+      chev: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>'
+    };
+
+    const platformOf = (n) => {
+      const low = (n || "").toLowerCase();
+      if (/\.(exe|msi|msix)$/.test(low)) return "win";
+      if (/\.(apk|aab)$/.test(low)) return "and";
+      return "file";
+    };
+    const appVer = (n, tag) => {
+      const m = (n || "").match(/(\d+\.\d+\.\d+)/) || (tag || "").match(/(\d+\.\d+(?:\.\d+)?)/);
+      return m ? "v" + m[1] : (tag || "");
+    };
+    const fmtSize = (b) => b ? `${(b / (1024 * 1024)).toFixed(1)} ${t("mb")}` : "";
+    const fmtDate = (iso) => {
+      try { return new Intl.DateTimeFormat(t("locale"), { year: "numeric", month: "long", day: "numeric" }).format(new Date(iso)); }
+      catch { return (iso || "").slice(0, 10); }
+    };
+
+    /* Tiny, safe Markdown renderer for release notes */
+    function renderNotes(md) {
+      const lines = esc(md || "").replace(/\r/g, "").split("\n");
+      let html = "", inList = false;
+      const inline = (s) => s
+        .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+        .replace(/`([^`]+)`/g, "<code>$1</code>")
+        .replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+      for (const raw of lines) {
+        const line = raw.trim();
+        if (/^[-*]\s+/.test(line)) {
+          if (!inList) { html += "<ul>"; inList = true; }
+          html += "<li>" + inline(line.replace(/^[-*]\s+/, "")) + "</li>";
+          continue;
         }
-      } catch {}
-      apply(saved);
-
-      btn.addEventListener("click", () => {
-        const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
-        apply(next);
-        try { localStorage.setItem(KEY, next); } catch {}
-      });
-    })();
-
-    /* 2. Collapsible Frosted Glass Accordion */
-    (function () {
-      const items = Array.from(document.querySelectorAll(".acc-item"));
-      const toggleAll = document.getElementById("toggle-all");
-
-      function syncButtonText() {
-        const allOpen = items.every((el) => el.classList.contains("open"));
-        toggleAll.textContent = allOpen ? "Collapse all" : "Expand all";
+        if (inList) { html += "</ul>"; inList = false; }
+        if (!line) continue;
+        if (/^#{1,6}\s+/.test(line)) { html += "<p><strong>" + inline(line.replace(/^#{1,6}\s+/, "")) + "</strong></p>"; continue; }
+        html += "<p>" + inline(line) + "</p>";
       }
+      if (inList) html += "</ul>";
+      return html;
+    }
 
-      items.forEach((item) => {
-        const btn = item.querySelector(".acc-trigger");
-        btn.addEventListener("click", () => {
-          const isOpen = item.classList.toggle("open");
-          btn.setAttribute("aria-expanded", String(isOpen));
-          syncButtonText();
-        });
-      });
+    function renderReleases() {
+      const list = document.getElementById("rel-list");
+      const more = document.getElementById("rel-more");
+      const toggle = document.getElementById("rel-toggle");
+      const shown = showOlder ? RELEASES : RELEASES.slice(0, VISIBLE);
 
-      toggleAll.addEventListener("click", () => {
-        const openNext = !items.every((el) => el.classList.contains("open"));
-        items.forEach((item) => {
-          item.classList.toggle("open", openNext);
-          item.querySelector(".acc-trigger").setAttribute("aria-expanded", String(openNext));
-        });
-        syncButtonText();
-      });
+      list.innerHTML = shown.map((r, i) => {
+        const latest = i === 0;
+        const notes = (LANG === "ar" && NOTES_AR[r.tag] && (r.body || "").trim().length < 200)
+          ? `<p>${esc(NOTES_AR[r.tag])}</p>` : renderNotes(r.body);
+        const assets = [...r.assets].sort((a, b) => {
+          const o = { win: 0, and: 1, file: 2 };
+          return o[platformOf(a.name)] - o[platformOf(b.name)];
+        }).map((a) => {
+          const p = platformOf(a.name);
+          const label = p === "win" ? t("win") : p === "and" ? t("and") : t("file");
+          const ver = p === "file" ? "" : ` · ${bdi(appVer(a.name, r.tag))}`;
+          return `
+            <div class="asset-row">
+              <span class="icon-chip" aria-hidden="true">${ICONS[p]}</span>
+              <div class="asset-meta">
+                <strong>${esc(label)}${ver}</strong>
+                <span><bdi>${esc(a.name)}</bdi> · ${esc(fmtSize(a.size))}</span>
+              </div>
+              <a class="asset-dl ${latest ? "primary" : "glass-btn"}" href="${esc(a.url)}" aria-label="${esc(t("dlAria", { f: a.name }))}">
+                ${ICONS.dl}<span class="dl-text">${esc(t("download"))}</span>
+              </a>
+            </div>`;
+        }).join("");
+        return `
+          <article class="glass rel-card" style="animation-delay:${Math.min(i, 4) * 60}ms">
+            <div class="rel-head">
+              <div class="rel-title-wrap">
+                <h3 class="rel-title">${bdi(r.name || r.tag)}</h3>
+                ${latest ? `<span class="rel-badge">${esc(t("latest"))}</span>` : ""}
+              </div>
+              <time class="rel-date" datetime="${esc(r.date || "")}">${esc(fmtDate(r.date))}</time>
+            </div>
+            ${notes ? `<div class="rel-notes">${notes}</div>` : ""}
+            <div class="rel-assets">${assets}</div>
+          </article>`;
+      }).join("");
 
-      syncButtonText();
-    })();
+      const hidden = RELEASES.length - VISIBLE;
+      more.hidden = hidden <= 0;
+      if (hidden > 0) {
+        toggle.innerHTML = (showOlder ? esc(t("fewer")) : esc(t("older", { n: hidden }))) +
+          `<span style="display:inline-flex;transform:rotate(${showOlder ? 180 : 0}deg)">${ICONS.chev}</span>`;
+      }
+      updateHero();
+    }
 
-    /* 3. Live GitHub Releases Sync (RTG099/ALPHA) */
-    (async function () {
-      const fmtSize = (b) => b ? `${(b / (1024 * 1024)).toFixed(1)} MB` : "";
-      const verOf = (n, t) => {
-        const m = (n || "").match(/(\d+\.\d+\.\d+)/) || (t || "").match(/(\d+\.\d+\.\d+)/);
-        return m ? `v${m[1]}` : (t || "Latest");
-      };
+    function updateHero() {
+      let win = null, and = null;
+      for (const r of RELEASES) {
+        for (const a of r.assets) {
+          const p = platformOf(a.name);
+          if (!win && p === "win") win = { a, r };
+          if (!and && p === "and") and = { a, r };
+        }
+        if (win && and) break;
+      }
+      let wv = "v1.3.1", ws = fmtSize(102267195), av = "v1.4.1", as = fmtSize(15358479);
+      if (win) {
+        wv = appVer(win.a.name, win.r.tag); ws = fmtSize(win.a.size);
+        document.getElementById("win-btn").href = win.a.url;
+      }
+      if (and) {
+        av = appVer(and.a.name, and.r.tag); as = fmtSize(and.a.size);
+        document.getElementById("and-btn").href = and.a.url;
+      }
+      document.getElementById("win-label").innerHTML = `${esc(t("dlWin"))} (${bdi(wv)})`;
+      document.getElementById("and-label").innerHTML = `${esc(t("dlAnd"))} (${bdi(av)})`;
+      document.getElementById("version-meta").innerHTML = esc(t("meta"))
+        .replace("{wv}", bdi(wv)).replace("{ws}", esc(ws)).replace("{av}", bdi(av)).replace("{as}", esc(as));
+    }
+
+    document.getElementById("rel-toggle").addEventListener("click", () => {
+      showOlder = !showOlder;
+      renderReleases();
+    });
+
+    (async function loadLive() {
       try {
-        const res = await fetch("https://api.github.com/repos/RTG099/ALPHA/releases?per_page=10", {
+        const res = await fetch("https://api.github.com/repos/RTG099/ALPHA/releases?per_page=30", {
           headers: { Accept: "application/vnd.github+json" }
         });
         if (!res.ok) return;
-        const rels = (await res.json()).filter((r) => !r.draft);
-        if (!rels.length) return;
-
-        let win = null, winRel = null, and = null, andRel = null;
-        for (const r of rels) {
-          for (const a of (r.assets || [])) {
-            const low = (a.name || "").toLowerCase();
-            if (!win && low.endsWith(".exe")) { win = a; winRel = r; }
-            if (!and && low.endsWith(".apk")) { and = a; andRel = r; }
-          }
-          if (win && and) break;
-        }
-
-        let wv = "v1.3.1", ws = "97.5 MB", av = "v1.4.1", as = "14.6 MB";
-        if (win) {
-          wv = verOf(win.name, winRel.tag_name);
-          ws = fmtSize(win.size);
-          document.getElementById("win-btn").href = win.browser_download_url;
-          document.getElementById("win-label").textContent = `Download for Windows (${wv})`;
-        }
-        if (and) {
-          av = verOf(and.name, andRel.tag_name);
-          as = fmtSize(and.size);
-          document.getElementById("and-btn").href = and.browser_download_url;
-          document.getElementById("and-label").textContent = `Download for Android (${av})`;
-        }
-        document.getElementById("version-meta").textContent =
-          `Windows 10/11 (${wv} · ${ws}) · Android 8.0+ (${av} · ${as})`;
-
-        const latest = rels[0];
-        const rName = latest.name || latest.tag_name || "Latest Release";
-        document.getElementById("rel-heading").textContent = `${rName} & Built-In Auto-Updater`;
-        if ((latest.body || "").trim()) {
-          document.getElementById("rel-notes").textContent =
-            `${rName} — ${latest.body.trim()} Both apps check for updates automatically on launch.`;
-        }
-        if (win && and) {
-          document.getElementById("rel-files").textContent =
-            `${win.name} (${ws}) · ${and.name} (${as})`;
-        }
+        const data = (await res.json()).filter((r) => !r.draft && (r.assets || []).length);
+        if (!data.length) return;
+        RELEASES = data.map((r) => ({
+          tag: r.tag_name, name: r.name || r.tag_name, date: r.published_at, body: r.body || "",
+          assets: r.assets.map((a) => ({ name: a.name, size: a.size, url: a.browser_download_url }))
+        }));
+        renderReleases();
       } catch {}
     })();
+
+    /* =========================================================
+       Accordion
+       ========================================================= */
+    const accItems = Array.from(document.querySelectorAll(".acc-item"));
+    const toggleAll = document.getElementById("toggle-all");
+    function syncToggleAll() {
+      const allOpen = accItems.every((el) => el.classList.contains("open"));
+      toggleAll.textContent = allOpen ? t("collapseAll") : t("expandAll");
+    }
+    accItems.forEach((item) => {
+      const btn = item.querySelector(".acc-trigger");
+      btn.addEventListener("click", () => {
+        const isOpen = item.classList.toggle("open");
+        btn.setAttribute("aria-expanded", String(isOpen));
+        syncToggleAll();
+      });
+    });
+    toggleAll.addEventListener("click", () => {
+      const openNext = !accItems.every((el) => el.classList.contains("open"));
+      accItems.forEach((item) => {
+        item.classList.toggle("open", openNext);
+        item.querySelector(".acc-trigger").setAttribute("aria-expanded", String(openNext));
+      });
+      syncToggleAll();
+    });
+
+    /* =========================================================
+       Theme (button shows the mode you switch TO)
+       ========================================================= */
+    const themeBtn = document.getElementById("theme-toggle");
+    function applyTheme(mode) {
+      const dark = mode === "dark";
+      root.setAttribute("data-theme", dark ? "dark" : "light");
+      document.getElementById("sun-ic").style.display = dark ? "block" : "none";
+      document.getElementById("moon-ic").style.display = dark ? "none" : "block";
+      document.getElementById("theme-text").textContent = dark ? t("light") : t("dark");
+      const label = dark ? t("toLight") : t("toDark");
+      themeBtn.setAttribute("aria-label", label);
+      themeBtn.setAttribute("title", label);
+      document.getElementById("theme-color").setAttribute("content", dark ? "#0c0f20" : "#dfe5fd");
+    }
+    themeBtn.addEventListener("click", () => {
+      const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      applyTheme(next);
+      try { localStorage.setItem("alpha_clean_theme", next); } catch {}
+    });
+
+    /* =========================================================
+       Language (English default · العربية RTL)
+       ========================================================= */
+    const langBtn = document.getElementById("lang-toggle");
+    function applyLang(lang) {
+      LANG = lang === "ar" ? "ar" : "en";
+      root.setAttribute("lang", LANG);
+      root.setAttribute("dir", LANG === "ar" ? "rtl" : "ltr");
+      i18nEls.forEach((el) => {
+        const k = el.getAttribute("data-i18n");
+        el.innerHTML = (LANG === "ar" && AR[k]) ? AR[k] : el._en;
+      });
+      document.title = t("title");
+      document.getElementById("meta-desc").setAttribute("content", t("desc"));
+      document.getElementById("lang-label").textContent = t("langLabel");
+      document.getElementById("lang-short").textContent = t("langShort");
+      langBtn.setAttribute("aria-label", t("langAria"));
+      langBtn.setAttribute("title", t("langAria"));
+      applyTheme(root.getAttribute("data-theme") === "dark" ? "dark" : "light");
+      syncToggleAll();
+      renderReleases();
+    }
+    langBtn.addEventListener("click", () => {
+      const next = LANG === "ar" ? "en" : "ar";
+      applyLang(next);
+      try { localStorage.setItem("alpha_lang", next); } catch {}
+    });
+
+    applyLang(LANG);
   </script>
 </body>
 </html>
